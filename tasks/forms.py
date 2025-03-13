@@ -1,29 +1,32 @@
 from django import forms
-from tasks.models import Task
+from tasks.models import Task, TaskDetail
 
 # Django Form
 
 
-class TaskForm(forms.Form):
-    title = forms.CharField(max_length=250, label="Task Title")
-    description = forms.CharField(
-        widget=forms.Textarea, label='Task Description')
-    due_date = forms.DateField(widget=forms.SelectDateWidget, label="Due Date")
-    assigned_to = forms.MultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, choices=[], label='Assigned To')
+# class TaskForm(forms.Form):
+#     title = forms.CharField(max_length=250, label="Task Title")
+#     description = forms.CharField(
+#         widget=forms.Textarea, label='Task Description')
+#     due_date = forms.DateField(widget=forms.SelectDateWidget, label="Due Date")
+#     assigned_to = forms.MultipleChoiceField(
+#         widget=forms.CheckboxSelectMultiple, choices=[], label='Assigned To')
 
-    def __init__(self, *args, **kwargs):
-        # print(args, kwargs)
-        employees = kwargs.pop("employees", [])
-        super().__init__(*args, **kwargs)
-        self.fields['assigned_to'].choices = [
-            (emp.id, emp.name) for emp in employees]
+#     def __init__(self, *args, **kwargs):
+#         # print(args, kwargs)
+#         employees = kwargs.pop("employees", [])
+#         super().__init__(*args, **kwargs)
+#         self.fields['assigned_to'].choices = [
+#             (emp.id, emp.name) for emp in employees]
 
 
 class StyledFormMixin:
     """ Mixing to apply style to form field"""
 
     default_classes = "border-2 border-gray-300 w-full p-3 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500"
+    def __init__(self, *arg, **kwarg):
+        super().__init__(*arg, **kwarg)
+        self.apply_styled_widgets()
 
     def apply_styled_widgets(self):
         for field_name, field in self.fields.items():
@@ -53,7 +56,7 @@ class StyledFormMixin:
                 field.widget.attrs.update({
                     'class': self.default_classes
                 })
-
+        
 
 # Django Model Form
 
@@ -69,6 +72,13 @@ class TaskModelForm(StyledFormMixin, forms.ModelForm):
 
     """ Widget using mixins """
 
-    def __init__(self, *arg, **kwarg):
-        super().__init__(*arg, **kwarg)
-        self.apply_styled_widgets()
+   
+
+class TaskDetailModelForm(StyledFormMixin,forms.ModelForm):
+    class Meta:
+        model = TaskDetail
+        fields = ['priority', 'notes']
+    
+   
+
+    
