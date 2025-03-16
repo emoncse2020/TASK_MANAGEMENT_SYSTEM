@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% comment %} <script src="https://unpkg.com/@tailwindcss/browser@4"></script> {% endcomment %}
+</head>
+<body class=''>
+    <h1 class = "text-3xl bg-cyan-400">Welcome to authentication system</h1>
+    <div>
+        <form action="" method = "POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Enter you username" name='username'>
+            <input type="password" name="password" id="" placeholder='Enter your password'>
+            <button type="submit">Log In</button>
+
+        </form>
+    </div>
+</body>
+</html>
