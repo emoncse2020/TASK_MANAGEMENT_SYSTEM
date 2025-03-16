@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    {% comment %} <script src="https://unpkg.com/@tailwindcss/browser@4"></script> {% endcomment %}
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
 <body class=''>
     <h1 class = "text-3xl bg-cyan-400">Welcome to authentication system</h1>
     <div>
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="px-2 py-1 {% if message.tags == 'success' %} bg-green-500{% endif %}">{{message}}</p>
+                {% endfor %}
+            {% endif %}
         <form action="" method = "POST">
             {% csrf_token %}
-            <input type="text" placeholder="Enter you username" name='username'>
-            <input type="password" name="password" id="" placeholder='Enter your password'>
+            {{form.as_p}}
             <button type="submit">Log In</button>
 
         </form>
