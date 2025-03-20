@@ -4,10 +4,16 @@ from tasks.forms import  TaskModelForm, TaskDetailModelForm
 from tasks.models import Employee, Task, TaskDetail, Project
 from django.db.models import Q, Count
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
 
 # Create your views here.
+def is_manager(user):
+    return user.groups.filter(name="Manager").exists()
+def is_employee(user):
+    return user.groups.filter(name="Manager").exists()
 
 
+@user_passes_test(is_manager, login_url='no-permission')
 def manager_dashboard(request):
     
     
@@ -54,24 +60,15 @@ def manager_dashboard(request):
 
 #CRUD:
 
-
-def user_dashboard(request):
+@user_passes_test(is_employee, login_url='no-permission')
+def employee_dashboard(request):
     return render(request, "dashboard/user-dashboard.html")
 
 
-def test(request):
-    names = ["Mahmud", "Ahamed", "John", "Mr. X"]
-    count = 0
-    for name in names:
-        count += 1
-    context = {
-        "names": names,
-        "age": 23,
-        "count": count
-    }
-    return render(request, 'test.html', context)
 
 
+@login_required
+@permission_required('tasks.add_task', login_url='no-permission')
 def create_task(request):
     # employees = Employee.objects.all()
     task_form = TaskModelForm() 
@@ -99,6 +96,9 @@ def create_task(request):
         "task_detail_form": task_detail_form
         }
     return render(request, "task_form.html", context)
+
+@login_required
+@permission_required('tasks.change_task', login_url='no-permission')
 def update_task(request, pk):
     # employees = Employee.objects.all()
     task = Task.objects.get(pk=pk)
@@ -128,7 +128,8 @@ def update_task(request, pk):
         "task_detail_form": task_detail_form
         }
     return render(request, "task_form.html", context)
-
+@login_required
+@permission_required('tasks.delete_task', login_url='no-permission')
 def delete_task(request, pk):
 
     if request.method =="POST":
@@ -142,7 +143,8 @@ def delete_task(request, pk):
 
 
     
-
+@login_required
+@permission_required('tasks.view_task', login_url='no-permission')
 def view_task(request):
 
     #Select_related (ForeignKey, OneToOneField)
