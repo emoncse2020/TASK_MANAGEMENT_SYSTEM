@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-</head>
-<body class=''>
-    <h1 class = "text-3xl bg-cyan-400">Welcome to authentication system</h1>
+{% extends "core/base.html" %}
+
+{% block content %}
    <div  class="flex items-center justify-center">
     <div class='h-[600px] w-[600px]'>
         <form action="" method = 'POST'>
@@ -25,9 +18,8 @@
                 {% endif %}
             {% endfor %}
 
-            <button type="submit" class="bg-cyan-400 px-2 py-1 m-2 rounded">Sign Up </button>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 w-full py-1 rounded mt-5 text-white">Sign Up </button>
         </form>
     </div>
    </div>
-</body>
-</html>
+{% endblock content %}

@@ -18,7 +18,7 @@
       <div class="grid grid-cols-4 gap-4 p-4 items-center">
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 rounded-full bg-green-500"></div>
-          <span>{{task.title}}</span>
+          <a href="{% url 'task-details' task.id %}">{{task.title}}</a>
 
           <a href="{% url 'update-task' task.pk %}"><button class='bg-amber-300 p-3 rounded px-2' >Edit</button></a>
           <form action="{% url "delete-task" task.pk%}" method ="POST">
@@ -38,7 +38,7 @@
             <div
             class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm border-2 border-white"
           >
-            {{emp_name.name|slice:':2'}}
+            {{emp_name.first_name|slice:':2'}}
           </div>
           {% endfor %}
           

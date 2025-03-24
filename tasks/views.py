@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from tasks.forms import  TaskModelForm, TaskDetailModelForm
-from tasks.models import Employee, Task, TaskDetail, Project
+from tasks.models import  Task, TaskDetail, Project
 from django.db.models import Q, Count
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
+from users.views import is_admin
 
 # Create your views here.
 def is_manager(user):
@@ -77,7 +77,7 @@ def create_task(request):
 
     if request.method == "POST":
         task_form = TaskModelForm(request.POST)
-        task_detail_form = TaskDetailModelForm(request.POST)
+        task_detail_form = TaskDetailModelForm(request.POST, request.FILES)
 
     if task_form.is_valid() and task_detail_form.is_valid():
         task = task_form.save()
@@ -164,3 +164,29 @@ def view_task(request):
     return render(request, 'show_task.html', context)
 
 
+@login_required
+@permission_required('tasks.view_task', login_url='no-permission')
+def task_details(request, task_id):
+    task = Task.objects.get(id = task_id)
+    choices = Task.STATUS_CHOICES
+
+    if request.method == 'POST':
+        selected_status = request.POST.get('task_status')
+        task.status = selected_status
+        task.save()
+        return redirect('task-details', task.id)
+    return render (request, 'task_details.html', {"task": task, "choices": choices})
+
+
+@login_required
+def dashboard(request):
+    if is_manager(request.user):
+        return redirect('manager-dashboard')
+    
+    elif is_employee(request.user):
+        return render('user-dashboard')
+    
+    elif is_admin(request.user):
+        return redirect('admin-dashboard')
+    
+    return redirect('no-permission')
